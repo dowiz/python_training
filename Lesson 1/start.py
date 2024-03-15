@@ -15,4 +15,6 @@
 # else:
 #     print(f"{num1} = {num2}")
 
-print("Nothing\nwill work\nunless you do")
+print("\t\t\tNothing\n\t\t\twill work\n\t\t\tunless you do")
+print("")
+print("\t\"Anyone who\n\t   stops\n\t      learning is old,\n\t         whether at twenty or eighty\"\n\t\t\t\t  Henry Ford")
