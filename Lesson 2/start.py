@@ -1,11 +1,19 @@
-def plus(a, b):
-    return a + b
+import paramiko
 
 
-first_number = int(input("Enter first number: "))
-second_number = int(input("Enter second number: "))
+def get_traffic():
+    ssh_client = paramiko.SSHClient()
+    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh_client.connect(hostname='10.7.103.103',
+                       username='python', password='python')
 
-sum_of_numbers = plus(first_number, second_number)
+    stdin, stdout, stdaddr = ssh_client.exec_command(
+        f"/interface monitor-traffic interface=ether1")
 
-print(f"First number = {first_number}\nSecond number = {
-      second_number}\nSum of numbers = {sum_of_numbers}")
+    for item in stdout:
+        print(item)
+
+    ssh_client.close()
+
+
+get_traffic()
