@@ -1,25 +1,33 @@
 import paramiko
+import settings
 
-users = {}
+hostname = settings.hostname
+port = settings.port
+username = settings.username
+password = settings.password
+columns = {}
+cap_users = {}
 
 
-def get_traffic():
+def get_info(request):
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(hostname='10.7.103.103',
-                       username='python', password='python')
+    ssh_client.connect(hostname=hostname, port=port,
+                       username=username, password=password)
 
-    stdin, stdout, stdaddr = ssh_client.exec_command(
-        f"/caps-man registration-table print proplist=mac-address")
+    stdin, stdout, stdaddr = ssh_client.exec_command(request)
 
-    namecolumns = list()
-    columns = {}
+    return stdout
 
-    for item in stdout:
-        if item.find('Columns:') != -1:
-            for column in item.strip('Columns: ').strip().split():
-                namecolumns.append(column)
-        elif item.find(namecolumns[0]) != -1:
+
+def get_values():
+    request = "/caps-man registration-table print proplist=mac-address,uptime,bytes,packets"
+    i_row = 1
+
+    for item in get_info(request):
+        if i_row == 1:
+            i_row = 1
+        elif i_row == 2:
             i = 0
             for column in item.strip().split():
                 columns[i] = column
@@ -29,14 +37,18 @@ def get_traffic():
             for value in item.strip().split():
                 if i == 0:
                     i = 0
+                elif i == 1:
+                    user = value
+                    cap_users[user] = {columns[i]: value}
                 else:
-                    users[value] = {columns[i]: value}
+                    cap_users[user][columns[i]] = value
 
                 i += 1
 
-    ssh_client.close()
+        i_row += 1
 
 
-get_traffic()
+get_values()
 
-print(users)
+for x in cap_users.values():
+    print(x)
