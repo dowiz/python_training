@@ -13,16 +13,18 @@ telegram_bot_url = f"https://api.telegram.org/bot{telegram_bot_token}/"
 # Delete a message by its ID
 def delete_message(message_id):
     method = "deleteMessage"
-    params = f"?chat_id={chat_id}&message_id={message_id}"
+    params = f"?chat_id={chat_id}&message_id={
+        message_id}&delete_chat_photo=True"  # Add delete_chat_photo parameter
 
     response = requests.get(telegram_bot_url + method + params).json()
     if response["ok"]:
         return "Message deleted"
     else:
-        return f"Not deleted due to error: {response["error_code"]}, description: {response["description"]}"
+        # Use single quotes for nested double quotes
+        return f"Not deleted due to error: {response['error_code']}, description: {response['description']}"
 
 
 # Delete messages with IDs
-for message_id in range(110, 112):
+for message_id in range(110, 180):
     print(f"Result of deleting a message with ID #{
           message_id}: {delete_message(str(message_id))}")
