@@ -25,6 +25,6 @@ def delete_message(message_id):
 
 
 # Delete messages with IDs
-for message_id in range(110, 180):
+for message_id in range(110, 270):
     print(f"Result of deleting a message with ID #{
           message_id}: {delete_message(str(message_id))}")
